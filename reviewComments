@@ -1,0 +1,16 @@
+---pom.xml
+1. added javafx-base dependency to use PlatformUtil class
+
+---SignInTest.java
+1. Instantiate the chromedriver after setDriverPath()
+2. Switch to frame to test the sign In button
+3. Use xpath for Sign in button on frame
+
+---HotelBookingTest.java
+1. Instantiate the chromedriver after setDriverPath()
+2. Used PageFactory.initElements(driver,  this) for annotations initialization
+
+---FlightBookingTest.java
+1. Instantiate the chromedriver after setDriverPath()
+2. Used WebDriverWait to wait to locate the text box autocomplete data
+3. Used Xpath to find the autocomplete fields
