@@ -1,24 +1,27 @@
-import com.sun.javafx.PlatformUtil;
+import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.List;
+import com.sun.javafx.PlatformUtil;
 
 public class FlightBookingTest {
 
-    WebDriver driver = new ChromeDriver();
+    WebDriver driver;
 
 
     @Test
-    public void testThatResultsAppearForAOneWayJourney() {
+    public void testThatResultsAppearForAOneWayJourney() throws InterruptedException {
 
         setDriverPath();
+        driver = new ChromeDriver();
         driver.get("https://www.cleartrip.com/");
         waitFor(2000);
         driver.findElement(By.id("OneWay")).click();
@@ -27,19 +30,20 @@ public class FlightBookingTest {
         driver.findElement(By.id("FromTag")).sendKeys("Bangalore");
 
         //wait for the auto complete options to appear for the origin
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+        wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.xpath("//ul[@id=\"ui-id-1\"]//li")));
+        List<WebElement> list = driver.findElements(By.xpath("//ul[@id=\"ui-id-1\"]//li"));
+        list.get(0).click();
 
-        waitFor(2000);
-        List<WebElement> originOptions = driver.findElement(By.id("ui-id-1")).findElements(By.tagName("li"));
-        originOptions.get(0).click();
-
-        driver.findElement(By.id("toTag")).clear();
-        driver.findElement(By.id("toTag")).sendKeys("Delhi");
+        driver.findElement(By.id("ToTag")).clear();
+        driver.findElement(By.id("ToTag")).sendKeys("Delhi");
 
         //wait for the auto complete options to appear for the destination
 
         waitFor(2000);
         //select the first item from the destination auto complete list
-        List<WebElement> destinationOptions = driver.findElement(By.id("ui-id-2")).findElements(By.tagName("li"));
+        wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.xpath("//ul[@id=\"ui-id-2\"]//li")));
+        List<WebElement> destinationOptions = driver.findElements(By.xpath("//ul[@id=\"ui-id-2\"]//li"));
         destinationOptions.get(0).click();
 
         driver.findElement(By.xpath("//*[@id='ui-datepicker-div']/div[1]/table/tbody/tr[3]/td[7]/a")).click();
